@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapIcon, SwordIcon, MusicIcon, SearchIcon, BeanIcon, DicesIcon, BookOpenIcon, ActivityIcon } from 'lucide-react';
@@ -18,12 +18,9 @@ const Index = () => {
   const [level, setLevel] = useState(1);
   const [experience, setExperience] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentProblem, setCurrentProblem] = useState(null);
-  const [userAnswer, setUserAnswer] = useState('');
-  const [message, setMessage] = useState('');
   const [activeFeature, setActiveFeature] = useState(null);
 
-  const generateProblem = () => {
+  const generateProblem = useCallback(() => {
     const operations = ['+', '-', '*'];
     const operation = operations[Math.floor(Math.random() * operations.length)];
     const num1 = Math.floor(Math.random() * 10) + 1;
@@ -46,38 +43,25 @@ const Index = () => {
     }
 
     return { problem, answer };
-  };
+  }, []);
 
   const startMission = () => {
-    const { problem, answer } = generateProblem();
-    setCurrentProblem({ problem, answer });
     setDialogOpen(true);
-    setUserAnswer('');
-    setMessage('');
   };
 
-  const checkAnswer = () => {
-    if (parseInt(userAnswer) === currentProblem.answer) {
-      setMessage('Correct! You saved the kingdom!');
-      setExperience(prev => {
-        const newExp = prev + 20;
-        if (newExp >= 100) {
-          setLevel(l => l + 1);
-          return newExp - 100;
-        }
-        return newExp;
-      });
-    } else {
-      setMessage('Oops! Try again, brave ranger!');
-    }
+  const handleCorrectAnswer = () => {
+    setExperience(prev => {
+      const newExp = prev + 20;
+      if (newExp >= 100) {
+        setLevel(l => l + 1);
+        return newExp - 100;
+      }
+      return newExp;
+    });
   };
 
   const startDailyChallenge = () => {
-    const { problem, answer } = generateProblem();
-    setCurrentProblem({ problem: `Daily Challenge: ${problem}`, answer });
     setDialogOpen(true);
-    setUserAnswer('');
-    setMessage('');
   };
 
   const missionCards = [
@@ -174,11 +158,8 @@ const Index = () => {
       <MathProblemDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        problem={currentProblem}
-        userAnswer={userAnswer}
-        setUserAnswer={setUserAnswer}
-        onSubmit={checkAnswer}
-        message={message}
+        generateProblem={generateProblem}
+        onCorrectAnswer={handleCorrectAnswer}
       />
     </div>
   );
