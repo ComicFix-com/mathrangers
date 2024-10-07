@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
-import { MapIcon, SwordIcon, CrownIcon, BookOpenIcon, UsersIcon, MusicIcon, SearchIcon, BeanIcon, DicesIcon, ActivityIcon } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MapIcon, SwordIcon, MusicIcon, SearchIcon, BeanIcon, DicesIcon, BookOpenIcon, ActivityIcon } from 'lucide-react';
+import Header from '@/components/Header';
+import MissionCard from '@/components/MissionCard';
+import ProfileCard from '@/components/ProfileCard';
+import MathProblemDialog from '@/components/MathProblemDialog';
+import DailyChallenge from '@/components/DailyChallenge';
 
 const Index = () => {
   const [level, setLevel] = useState(1);
@@ -65,16 +65,41 @@ const Index = () => {
     }
   };
 
+  const startDailyChallenge = () => {
+    const { problem, answer } = generateProblem();
+    setCurrentProblem({ problem: `Daily Challenge: ${problem}`, answer });
+    setDialogOpen(true);
+    setUserAnswer('');
+    setMessage('');
+  };
+
+  const missionCards = [
+    { icon: MapIcon, title: "Missions", buttonText: "Start New Mission", onClick: startMission, buttonColor: "bg-green-600 hover:bg-green-500" },
+    { icon: SwordIcon, title: "Math Challenges", buttonText: "Take on a Challenge", onClick: startMission, buttonColor: "bg-red-600 hover:bg-red-500" },
+  ];
+
+  const challengeCards = [
+    { icon: MusicIcon, title: "Counting Songs", buttonText: "Sing Along", buttonColor: "bg-blue-600 hover:bg-blue-500" },
+    { icon: SearchIcon, title: "Number Hunt", buttonText: "Start Hunt", buttonColor: "bg-green-600 hover:bg-green-500" },
+    { icon: BeanIcon, title: "Counting Beans", buttonText: "Play Now", buttonColor: "bg-yellow-600 hover:bg-yellow-500" },
+  ];
+
+  const learningCards = [
+    { icon: DicesIcon, title: "Math Games", buttonText: "Play Games", buttonColor: "bg-pink-600 hover:bg-pink-500" },
+    { icon: BookOpenIcon, title: "Math Stories", buttonText: "Read Stories", buttonColor: "bg-indigo-600 hover:bg-indigo-500" },
+    { icon: ActivityIcon, title: "Math Puzzles", buttonText: "Solve Puzzles", buttonColor: "bg-orange-600 hover:bg-orange-500" },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-700 text-white">
-      <header className="p-4">
-        <h1 className="text-2xl md:text-4xl font-bold font-cinzel text-center">MathRangers: Problem Solvers</h1>
-      </header>
+      <Header />
       
       <main className="container mx-auto p-4">
         <h2 className="text-xl md:text-2xl font-cinzel mb-4 text-center">Welcome, Math Superhero!</h2>
         
-        <Tabs defaultValue="missions" className="w-full">
+        <DailyChallenge onStartChallenge={startDailyChallenge} />
+        
+        <Tabs defaultValue="missions" className="w-full mt-8">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
             <TabsTrigger value="missions">Missions</TabsTrigger>
             <TabsTrigger value="challenges">Challenges</TabsTrigger>
@@ -83,111 +108,27 @@ const Index = () => {
           </TabsList>
           <TabsContent value="missions">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <MapIcon className="mr-2" /> Missions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-green-600 hover:bg-green-500" onClick={startMission}>Start New Mission</Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <SwordIcon className="mr-2" /> Math Challenges
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-red-600 hover:bg-red-500" onClick={startMission}>Take on a Challenge</Button>
-                </CardContent>
-              </Card>
+              {missionCards.map((card, index) => (
+                <MissionCard key={index} {...card} />
+              ))}
             </div>
           </TabsContent>
           <TabsContent value="challenges">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <MusicIcon className="mr-2" /> Counting Songs
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-500">Sing Along</Button>
-                </CardContent>
-              </Card>
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <SearchIcon className="mr-2" /> Number Hunt
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-green-600 hover:bg-green-500">Start Hunt</Button>
-                </CardContent>
-              </Card>
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <BeanIcon className="mr-2" /> Counting Beans
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-yellow-600 hover:bg-yellow-500">Play Now</Button>
-                </CardContent>
-              </Card>
+              {challengeCards.map((card, index) => (
+                <MissionCard key={index} {...card} />
+              ))}
             </div>
           </TabsContent>
           <TabsContent value="learning">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <DicesIcon className="mr-2" /> Math Games
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-pink-600 hover:bg-pink-500">Play Games</Button>
-                </CardContent>
-              </Card>
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <BookOpenIcon className="mr-2" /> Math Stories
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-indigo-600 hover:bg-indigo-500">Read Stories</Button>
-                </CardContent>
-              </Card>
-              <Card className="bg-purple-800 border-yellow-500">
-                <CardHeader>
-                  <CardTitle className="font-cinzel flex items-center">
-                    <ActivityIcon className="mr-2" /> Math Puzzles
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-orange-600 hover:bg-orange-500">Solve Puzzles</Button>
-                </CardContent>
-              </Card>
+              {learningCards.map((card, index) => (
+                <MissionCard key={index} {...card} />
+              ))}
             </div>
           </TabsContent>
           <TabsContent value="profile">
-            <Card className="bg-purple-800 border-yellow-500">
-              <CardHeader>
-                <CardTitle className="font-cinzel">Your Ranger</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Avatar className="w-20 h-20 mx-auto mb-4">
-                  <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback>MR</AvatarFallback>
-                </Avatar>
-                <Progress value={experience} className="mb-2" />
-                <p className="text-center">Level {level} Ranger</p>
-              </CardContent>
-            </Card>
+            <ProfileCard level={level} experience={experience} />
           </TabsContent>
         </Tabs>
         
@@ -200,34 +141,15 @@ const Index = () => {
         </div>
       </main>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="bg-purple-800 text-white">
-          <DialogHeader>
-            <DialogTitle className="font-cinzel text-2xl">Math Mission</DialogTitle>
-            <DialogDescription className="text-gray-300">
-              Solve this problem to save the kingdom!
-            </DialogDescription>
-          </DialogHeader>
-          {currentProblem && (
-            <div className="py-4">
-              <p className="text-xl font-bold mb-4">{currentProblem.problem} = ?</p>
-              <Input
-                type="number"
-                placeholder="Enter your answer"
-                value={userAnswer}
-                onChange={(e) => setUserAnswer(e.target.value)}
-                className="bg-purple-700 text-white"
-              />
-            </div>
-          )}
-          <DialogFooter>
-            <Button onClick={checkAnswer} className="bg-green-600 hover:bg-green-500">
-              Submit Answer
-            </Button>
-          </DialogFooter>
-          {message && <p className="mt-4 text-center font-bold">{message}</p>}
-        </DialogContent>
-      </Dialog>
+      <MathProblemDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        problem={currentProblem}
+        userAnswer={userAnswer}
+        setUserAnswer={setUserAnswer}
+        onSubmit={checkAnswer}
+        message={message}
+      />
     </div>
   );
 };
