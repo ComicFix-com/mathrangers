@@ -106,7 +106,9 @@ const Index = () => {
       <Header />
       
       <main className="container mx-auto p-4 flex-grow">
-        <h2 className="text-xl md:text-2xl font-cinzel mb-4 text-center">Welcome, Math Superhero!</h2>
+        <h2 className="text-xl md:text-2xl font-cinzel mb-4 text-center">Welcome, Tech Superhero!</h2>
+        
+        <ProfileCard level={level} experience={experience} />
         
         <DailyChallenge onStartChallenge={startDailyChallenge} />
         
@@ -114,11 +116,10 @@ const Index = () => {
           renderActiveFeature()
         ) : (
           <Tabs defaultValue="missions" className="w-full mt-8">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-3">
               <TabsTrigger value="missions">Missions</TabsTrigger>
               <TabsTrigger value="challenges">Challenges</TabsTrigger>
               <TabsTrigger value="learning">Learning</TabsTrigger>
-              <TabsTrigger value="profile">Profile</TabsTrigger>
             </TabsList>
             <TabsContent value="missions">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -140,9 +141,6 @@ const Index = () => {
                   <MissionCard key={index} {...card} />
                 ))}
               </div>
-            </TabsContent>
-            <TabsContent value="profile">
-              <ProfileCard level={level} experience={experience} />
             </TabsContent>
           </Tabs>
         )}

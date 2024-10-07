@@ -29,19 +29,28 @@ const ProfileCard = ({ level, experience }) => {
     fetchRandomAvatar();
   }, []);
 
+  const getRangerTitle = (level) => {
+    if (level === 1) return "Network Novice";
+    if (level <= 3) return "Signal Scout";
+    if (level <= 5) return "Bandwidth Warrior";
+    if (level <= 7) return "Protocol Pioneer";
+    return "Cyber Commander";
+  };
+
   return (
     <Card className="bg-purple-800 border-yellow-500">
       <CardHeader>
-        <CardTitle className="font-cinzel">Your Ranger</CardTitle>
+        <CardTitle className="font-cinzel">Your Tech Ranger</CardTitle>
       </CardHeader>
       <CardContent>
         <Avatar className="w-20 h-20 mx-auto mb-4">
           <AvatarImage src={avatarUrl} alt="Random profile avatar" />
-          <AvatarFallback>MR</AvatarFallback>
+          <AvatarFallback>TR</AvatarFallback>
         </Avatar>
         <Progress value={experience} className="mb-2" />
-        <p className="text-center">Level <AnimatedNumber value={level} /> Ranger</p>
+        <p className="text-center">Level <AnimatedNumber value={level} /> {getRangerTitle(level)}</p>
         <p className="text-center">XP: <AnimatedNumber value={experience} /> / 100</p>
+        <p className="text-center text-sm mt-2">Signal Range: {level * 10} meters</p>
       </CardContent>
     </Card>
   );
