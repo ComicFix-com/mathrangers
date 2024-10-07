@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapIcon, SwordIcon, MusicIcon, SearchIcon, BeanIcon, DicesIcon, BookOpenIcon, ActivityIcon } from 'lucide-react';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import MissionCard from '@/components/MissionCard';
 import ProfileCard from '@/components/ProfileCard';
 import MathProblemDialog from '@/components/MathProblemDialog';
@@ -101,10 +102,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-700 text-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-900 to-purple-700 text-white">
       <Header />
       
-      <main className="container mx-auto p-4">
+      <main className="container mx-auto p-4 flex-grow">
         <h2 className="text-xl md:text-2xl font-cinzel mb-4 text-center">Welcome, Math Superhero!</h2>
         
         <DailyChallenge onStartChallenge={startDailyChallenge} />
@@ -154,6 +155,8 @@ const Index = () => {
           </a>
         </div>
       </main>
+
+      <Footer />
 
       <MathProblemDialog
         open={dialogOpen}
