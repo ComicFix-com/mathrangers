@@ -7,6 +7,12 @@ import MissionCard from '@/components/MissionCard';
 import ProfileCard from '@/components/ProfileCard';
 import MathProblemDialog from '@/components/MathProblemDialog';
 import DailyChallenge from '@/components/DailyChallenge';
+import CountingSongs from '@/components/CountingSongs';
+import NumberHunt from '@/components/NumberHunt';
+import CountingBeans from '@/components/CountingBeans';
+import MathGames from '@/components/MathGames';
+import MathStories from '@/components/MathStories';
+import MathPuzzles from '@/components/MathPuzzles';
 
 const Index = () => {
   const [level, setLevel] = useState(1);
@@ -15,6 +21,7 @@ const Index = () => {
   const [currentProblem, setCurrentProblem] = useState(null);
   const [userAnswer, setUserAnswer] = useState('');
   const [message, setMessage] = useState('');
+  const [activeFeature, setActiveFeature] = useState(null);
 
   const generateProblem = () => {
     const operations = ['+', '-', '*'];
@@ -79,16 +86,35 @@ const Index = () => {
   ];
 
   const challengeCards = [
-    { icon: MusicIcon, title: "Counting Songs", buttonText: "Sing Along", buttonColor: "bg-blue-600 hover:bg-blue-500" },
-    { icon: SearchIcon, title: "Number Hunt", buttonText: "Start Hunt", buttonColor: "bg-green-600 hover:bg-green-500" },
-    { icon: BeanIcon, title: "Counting Beans", buttonText: "Play Now", buttonColor: "bg-yellow-600 hover:bg-yellow-500" },
+    { icon: MusicIcon, title: "Counting Songs", buttonText: "Sing Along", onClick: () => setActiveFeature('countingSongs'), buttonColor: "bg-blue-600 hover:bg-blue-500" },
+    { icon: SearchIcon, title: "Number Hunt", buttonText: "Start Hunt", onClick: () => setActiveFeature('numberHunt'), buttonColor: "bg-green-600 hover:bg-green-500" },
+    { icon: BeanIcon, title: "Counting Beans", buttonText: "Play Now", onClick: () => setActiveFeature('countingBeans'), buttonColor: "bg-yellow-600 hover:bg-yellow-500" },
   ];
 
   const learningCards = [
-    { icon: DicesIcon, title: "Math Games", buttonText: "Play Games", buttonColor: "bg-pink-600 hover:bg-pink-500" },
-    { icon: BookOpenIcon, title: "Math Stories", buttonText: "Read Stories", buttonColor: "bg-indigo-600 hover:bg-indigo-500" },
-    { icon: ActivityIcon, title: "Math Puzzles", buttonText: "Solve Puzzles", buttonColor: "bg-orange-600 hover:bg-orange-500" },
+    { icon: DicesIcon, title: "Math Games", buttonText: "Play Games", onClick: () => setActiveFeature('mathGames'), buttonColor: "bg-pink-600 hover:bg-pink-500" },
+    { icon: BookOpenIcon, title: "Math Stories", buttonText: "Read Stories", onClick: () => setActiveFeature('mathStories'), buttonColor: "bg-indigo-600 hover:bg-indigo-500" },
+    { icon: ActivityIcon, title: "Math Puzzles", buttonText: "Solve Puzzles", onClick: () => setActiveFeature('mathPuzzles'), buttonColor: "bg-orange-600 hover:bg-orange-500" },
   ];
+
+  const renderActiveFeature = () => {
+    switch (activeFeature) {
+      case 'countingSongs':
+        return <CountingSongs onClose={() => setActiveFeature(null)} />;
+      case 'numberHunt':
+        return <NumberHunt onClose={() => setActiveFeature(null)} />;
+      case 'countingBeans':
+        return <CountingBeans onClose={() => setActiveFeature(null)} />;
+      case 'mathGames':
+        return <MathGames onClose={() => setActiveFeature(null)} />;
+      case 'mathStories':
+        return <MathStories onClose={() => setActiveFeature(null)} />;
+      case 'mathPuzzles':
+        return <MathPuzzles onClose={() => setActiveFeature(null)} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-700 text-white">
@@ -99,38 +125,42 @@ const Index = () => {
         
         <DailyChallenge onStartChallenge={startDailyChallenge} />
         
-        <Tabs defaultValue="missions" className="w-full mt-8">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
-            <TabsTrigger value="missions">Missions</TabsTrigger>
-            <TabsTrigger value="challenges">Challenges</TabsTrigger>
-            <TabsTrigger value="learning">Learning</TabsTrigger>
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-          </TabsList>
-          <TabsContent value="missions">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {missionCards.map((card, index) => (
-                <MissionCard key={index} {...card} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="challenges">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {challengeCards.map((card, index) => (
-                <MissionCard key={index} {...card} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="learning">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {learningCards.map((card, index) => (
-                <MissionCard key={index} {...card} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="profile">
-            <ProfileCard level={level} experience={experience} />
-          </TabsContent>
-        </Tabs>
+        {activeFeature ? (
+          renderActiveFeature()
+        ) : (
+          <Tabs defaultValue="missions" className="w-full mt-8">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+              <TabsTrigger value="missions">Missions</TabsTrigger>
+              <TabsTrigger value="challenges">Challenges</TabsTrigger>
+              <TabsTrigger value="learning">Learning</TabsTrigger>
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+            </TabsList>
+            <TabsContent value="missions">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {missionCards.map((card, index) => (
+                  <MissionCard key={index} {...card} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="challenges">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {challengeCards.map((card, index) => (
+                  <MissionCard key={index} {...card} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="learning">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {learningCards.map((card, index) => (
+                  <MissionCard key={index} {...card} />
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="profile">
+              <ProfileCard level={level} experience={experience} />
+            </TabsContent>
+          </Tabs>
+        )}
         
         <div className="mt-8 text-center">
           <a href="upi://pay?pa=adnanmuhammad4393@okicici&pn=Adnan%20Muhammad&am=500.00&cu=INR&tn=Supporting ComicFix Community : Math Kingdom Conquest">
